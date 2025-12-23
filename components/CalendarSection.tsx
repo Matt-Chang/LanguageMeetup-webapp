@@ -122,12 +122,11 @@ export default function CalendarSection({ onVenueSelect }: CalendarSectionProps)
                                         {cell.day}
                                     </span>
 
-                                    {/* Events */}
-                                    <div className="space-y-1.5 overflow-y-auto max-h-[100px] custom-scrollbar">
+                                    <div className="space-y-1 overflow-y-auto max-h-[80px] md:max-h-[100px] custom-scrollbar">
                                         {cell.events.map(ev => (
                                             <div
                                                 key={ev.venueId}
-                                                className={`text-[10px] md:text-xs p-1.5 rounded-lg border leading-tight transition-all
+                                                className={`text-[9px] md:text-xs p-1 md:p-1.5 rounded-md border leading-tight transition-all
                                                     ${ev.isCancelled
                                                         ? 'bg-red-50 border-red-100 text-red-500 line-through opacity-70'
                                                         : 'bg-orange-50 border-orange-100 text-orange-800 hover:shadow-md cursor-pointer hover:scale-[1.02]'
@@ -137,13 +136,13 @@ export default function CalendarSection({ onVenueSelect }: CalendarSectionProps)
                                                 onClick={() => !ev.isCancelled && onVenueSelect(ev.venueId as 'mercy' | 't2')}
                                             >
                                                 <div className="font-bold truncate">
-                                                    {ev.venueName}
+                                                    {ev.venueName.replace('Mercy Café', 'Mercy').replace('T2 Café', 'T2')}
                                                 </div>
                                                 {ev.isCancelled && (
-                                                    <div className="text-[9px] font-bold mt-0.5 no-underline">CANCELLED</div>
+                                                    <div className="text-[8px] font-bold mt-0.5 no-underline">CANCELLED</div>
                                                 )}
                                                 {!ev.isCancelled && (
-                                                    <div className="text-[9px] opacity-80 mt-0.5 transform">{ev.venueId === 'mercy' ? '7 PM' : '6 PM'}</div>
+                                                    <div className="text-[8px] md:text-[9px] opacity-80 mt-0.5 transform">{ev.venueId === 'mercy' ? '7 PM' : '6 PM'}</div>
                                                 )}
                                             </div>
                                         ))}

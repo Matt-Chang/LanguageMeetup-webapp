@@ -68,7 +68,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                     {/* 1. Centered Location */}
                     <div className="text-center mb-12 animate-fadeIn key={activeVenueId}">
 
-                        <h3 className="text-3xl md:text-3xl font-extrabold text-[#002B49] mb-4 font-heading px-4">
+                        <h3 className="text-3xl md:text-3xl font-extrabold text-[#002B49] mb-4 font-heading px-4 whitespace-nowrap">
                             {activeVenue.name}
                         </h3>
                         <div className="text-gray-600 space-y-1">
