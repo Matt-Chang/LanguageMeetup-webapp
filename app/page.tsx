@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <main className="min-h-screen font-body">
       {/* Hero Section */}
-      <header id="home" className="relative h-screen min-h-[600px] flex items-center justify-center text-center text-white bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/assets/hero-bg-new.jpg')" }}>
+      <header id="home" className="relative h-screen min-h-[600px] flex items-center justify-center text-center text-white bg-cover bg-center md:bg-fixed" style={{ backgroundImage: "url('/assets/hero-bg-new.jpg')" }}>
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative z-10 max-w-[800px] px-5 animate-fadeInUp">
 

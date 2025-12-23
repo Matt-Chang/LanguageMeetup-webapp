@@ -151,12 +151,12 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                             </div>
 
                             {/* Mercy Map Container */}
-                            <div className="mx-auto max-w-[420px] bg-[#FFF9F0] rounded-3xl border-2 border-[#002B49] p-8 pb-14 relative shadow-lg">
+                            <div className="mx-auto max-w-[420px] bg-[#FFF9F0] rounded-3xl border-2 border-[#002B49] p-4 md:p-8 pb-14 relative shadow-lg">
                                 {/* Inner Room Line */}
-                                <div className="absolute inset-x-6 inset-t-6 bottom-[56px] border-2 border-[#002B49] rounded-xl pointer-events-none"></div>
+                                <div className="absolute inset-x-4 md:inset-x-6 inset-t-6 bottom-[56px] border-2 border-[#002B49] rounded-xl pointer-events-none"></div>
 
                                 {/* Front Desk - Top Right */}
-                                <div className="absolute top-0 right-[5%] w-[140px] h-8 bg-[#1F2937] rounded-b-lg flex items-center justify-center z-20 shadow-md">
+                                <div className="absolute top-0 right-[5%] w-[120px] md:w-[140px] h-8 bg-[#1F2937] rounded-b-lg flex items-center justify-center z-20 shadow-md">
                                     <span className="text-white font-bold text-xs">Front Desk</span>
                                 </div>
 
@@ -169,20 +169,20 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
 
                                 <div className="relative h-[450px] w-full mt-6">
                                     {/* Card Games Top Left */}
-                                    <div className="absolute top-[5%] left-[5%] w-[80px] h-[140px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
-                                        <span className="text-[#1F2937] font-bold text-sm leading-tight">Card<br />Games<br />Table</span>
+                                    <div className="absolute top-[5%] left-2 md:left-[5%] w-[70px] md:w-[80px] h-[140px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
+                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">Card<br />Games<br />Table</span>
                                     </div>
                                     {/* Japanese Top Right */}
-                                    <div className="absolute top-[7%] right-[5%] w-[140px] h-[80px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
-                                        <span className="text-[#1F2937] font-bold text-sm leading-tight">Japanese<br />Table</span>
+                                    <div className="absolute top-[7%] right-2 md:right-[5%] w-[120px] md:w-[140px] h-[80px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
+                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">Japanese<br />Table</span>
                                     </div>
                                     {/* IT Bottom Left */}
-                                    <div className="absolute bottom-[10%] left-[5%] w-[80px] h-[120px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
-                                        <span className="text-[#1F2937] font-bold text-sm leading-tight">IT<br />Table</span>
+                                    <div className="absolute bottom-[10%] left-2 md:left-[5%] w-[70px] md:w-[80px] h-[120px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
+                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">IT<br />Table</span>
                                     </div>
                                     {/* Free Talk Bottom Right */}
-                                    <div className="absolute bottom-[10%] right-[5%] w-[80px] h-[160px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
-                                        <span className="text-[#1F2937] font-bold text-sm leading-tight">Free Talk<br />Table</span>
+                                    <div className="absolute bottom-[10%] right-2 md:right-[5%] w-[70px] md:w-[80px] h-[160px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
+                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">Free Talk<br />Table</span>
                                     </div>
                                 </div>
 
