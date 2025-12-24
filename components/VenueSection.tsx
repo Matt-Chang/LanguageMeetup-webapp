@@ -16,14 +16,18 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
     const [isModalOpen, setIsModalOpen] = useState(false);
     // Removed internal state for activeVenueId to lift it up
     const [nextEvent, setNextEvent] = useState<EventStatus | null>(null);
+    const [nextActiveEvent, setNextActiveEvent] = useState<EventStatus | null>(null);
 
     const activeVenue = VENUES[activeVenueId];
 
     useEffect(() => {
         const checkSchedule = async () => {
-            const events = await getUpcomingEvents(activeVenueId, 1);
+            const events = await getUpcomingEvents(activeVenueId, 4);
             if (events.length > 0) {
                 setNextEvent(events[0]);
+                // Find first non-cancelled event
+                const active = events.find(e => !e.isCancelled);
+                setNextActiveEvent(active || null);
             }
         };
         checkSchedule();
@@ -241,7 +245,8 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
 
                     {/* 5. Bottom CTA */}
                     <div id="join-cta" className="text-center space-y-6 pt-4 border-t border-gray-100">
-                        {nextEvent?.isCancelled ? (
+                        {/* Cancellation Warning */}
+                        {nextEvent?.isCancelled && (
                             <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-pulse">
                                 <p className="text-red-600 font-bold text-lg mb-1">
                                     ⚠️ Next Meetup Cancelled ({nextEvent.date})
@@ -250,29 +255,35 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                                     {nextEvent.note || "Please check the schedule for the next available date."}
                                 </p>
                             </div>
-                        ) : (
-                            <>
-                                <RegistrantTicker theme="light" />
-                                <button
-                                    onClick={onJoinClick}
-                                    className="bg-[#F97316] hover:bg-[#EA580C] text-white text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
-                                >
-                                    Join Next Meetup ({activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})
-                                </button>
-                            </>
                         )}
 
-                        {/* Always show button if cancelled? Or allow booking for future? 
-                            Let's allow booking for future still, but maybe change text 'Join Upcoming Meetup'
-                        */}
-                        {nextEvent?.isCancelled && (
+                        {/* Ticker & Button */}
+                        {/* Use nextActiveEvent or nextEvent (if active) */}
+                        <RegistrantTicker theme="light" />
+
+                        {(nextActiveEvent || (!nextEvent?.isCancelled && nextEvent)) ? (
                             <button
-                                onClick={() => setIsModalOpen(true)}
-                                className="mt-4 text-gray-500 underline text-sm hover:text-gray-700"
+                                onClick={onJoinClick}
+                                className="bg-[#F97316] hover:bg-[#EA580C] text-white text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
                             >
-                                Register for a future date
+                                Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
+                            </button>
+                        ) : (
+                            <button
+                                disabled
+                                className="bg-gray-300 text-white text-lg font-bold py-3 px-12 rounded-full cursor-not-allowed w-full md:w-auto"
+                            >
+                                No Upcoming Events
                             </button>
                         )}
+
+                        {/* Secondary Link */}
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="mt-4 text-gray-500 underline text-sm hover:text-gray-700 block mx-auto"
+                        >
+                            Register for a different date
+                        </button>
                     </div>
                 </div>
 

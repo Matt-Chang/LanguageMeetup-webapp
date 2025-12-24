@@ -99,8 +99,11 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
 
     // Format date for display (e.g. "for next Friday" or just date)
     // Safe parse YYYY-MM-DD to local date
+    // Safe parse YYYY-MM-DD to local date
     const [y, m, d] = currentItem.event_date.split('-').map(Number);
     const dateObj = new Date(y, m - 1, d);
+    if (isNaN(dateObj.getTime())) return null; // Skip invalid dates
+
     const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
     const dateStr = dateObj.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
 
