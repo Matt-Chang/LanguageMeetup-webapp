@@ -11,18 +11,20 @@ interface Registrant {
     event_date: string;
 }
 
-export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' | 'dark' }) {
+export default function RegistrantTicker({ theme = 'light', venueId }: { theme?: 'light' | 'dark', venueId?: string }) {
     const [registrants, setRegistrants] = useState<Registrant[]>([]);
     const [targetDates, setTargetDates] = useState<string[]>([]);
     const [offset, setOffset] = useState(0);
+    const [nextDisplayDate, setNextDisplayDate] = useState('');
 
-    // 1. Calculate Target Dates (Next Available for EACH venue)
+    // 1. Calculate Target Dates
     useEffect(() => {
         const getDates = async () => {
             const { getUpcomingEvents } = await import('../lib/schedule');
-            const events = await getUpcomingEvents(undefined, 8); // Check next 8 events to cover gaps
+            // If venueId is specific, we only care about that venue's next active date
+            // If global, we check all
+            const events = await getUpcomingEvents(venueId, 8);
 
-            // Find first active event for each venue
             const uniqueVenueDates = new Map<string, string>();
             for (const ev of events) {
                 if (!ev.isCancelled && !uniqueVenueDates.has(ev.venueId)) {
@@ -31,13 +33,23 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
             }
             const dates = Array.from(uniqueVenueDates.values());
             setTargetDates(dates);
+
+            // Set display date for "No Registrants" state
+            if (dates.length > 0) {
+                // Sort dates to find the absolute soonest one among targets
+                dates.sort();
+                setNextDisplayDate(dates[0]);
+            }
         };
         getDates();
-    }, []);
+    }, [venueId]);
 
     // 2. Fetch & Subscribe
     useEffect(() => {
-        if (targetDates.length === 0) return;
+        if (targetDates.length === 0) {
+            setRegistrants([]);
+            return;
+        }
 
         const fetchRegistrants = async () => {
             const { data } = await supabase
@@ -47,14 +59,19 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
                 .order('created_at', { ascending: false })
                 .limit(20);
 
-            if (data) setRegistrants(data);
+            if (data) {
+                // If venueId is set, further filter registrants by venue type?
+                // Actually targetDates are already filtered by venue events, so the date check implies venue check
+                // BUT if two venues share a date (unlikely given Thu/Fri split), we might need to filter table_type.
+                // For now, date separation is sufficient.
+                setRegistrants(data);
+            }
         };
 
         fetchRegistrants();
 
-        // Subscribe to ALL insertions, filter client-side for simplicity
         const channel = supabase
-            .channel('registrations_ticker')
+            .channel(`registrations_ticker_${venueId || 'all'}`)
             .on(
                 'postgres_changes',
                 {
@@ -64,7 +81,6 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
                 },
                 (payload) => {
                     const newReg = payload.new as Registrant;
-                    // Only add if it matches one of our target dates
                     if (targetDates.includes(newReg.event_date)) {
                         setRegistrants((prev) => [newReg, ...prev]);
                     }
@@ -75,7 +91,7 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [targetDates]);
+    }, [targetDates, venueId]);
 
     // 3. Animation Logic
     useEffect(() => {
@@ -89,7 +105,7 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
     if (registrants.length === 0) {
         return (
             <div className={`${theme === 'dark' ? 'text-gray-200' : 'text-gray-500'} text-sm font-medium animate-pulse text-center`}>
-                Start the movement! <span className="text-primary font-bold">Register now</span> for upcoming events.
+                Start the movement! <span className="text-primary font-bold">Register now</span> for {nextDisplayDate || 'upcoming events'}.
             </div>
         );
     }
@@ -97,15 +113,16 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
     // Visual Window
     const currentItem = registrants[offset];
 
-    // Format date for display (e.g. "for next Friday" or just date)
-    // Safe parse YYYY-MM-DD to local date
-    // Safe parse YYYY-MM-DD to local date
+    // Format date for display
     const [y, m, d] = currentItem.event_date.split('-').map(Number);
     const dateObj = new Date(y, m - 1, d);
-    if (isNaN(dateObj.getTime())) return null; // Skip invalid dates
 
-    const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
-    const dateStr = dateObj.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    let dateStr = '';
+    if (!isNaN(dateObj.getTime())) {
+        const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+        const shortDate = dateObj.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+        dateStr = `on ${dayName} (${shortDate})`;
+    }
 
     return (
         <div className={`h-12 overflow-hidden relative flex items-center justify-center ${theme === 'dark' ? 'text-white' : 'text-gray-600'}`}>
@@ -117,7 +134,7 @@ export default function RegistrantTicker({ theme = 'light' }: { theme?: 'light' 
                 <span className="text-primary font-bold">
                     {TABLE_DISPLAY_NAMES[currentItem.table_type] || currentItem.table_type}
                 </span>
-                {' '}on {dayName} ({dateStr}).
+                {' '}{dateStr}.
             </div>
         </div>
     );

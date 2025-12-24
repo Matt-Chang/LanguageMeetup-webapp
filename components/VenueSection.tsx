@@ -259,7 +259,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
 
                         {/* Ticker & Button */}
                         {/* Use nextActiveEvent or nextEvent (if active) */}
-                        <RegistrantTicker theme="light" />
+                        <RegistrantTicker theme="light" venueId={activeVenueId} />
 
                         {(nextActiveEvent || (!nextEvent?.isCancelled && nextEvent)) ? (
                             <button
