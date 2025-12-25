@@ -13,7 +13,7 @@ export default function Footer() {
                         Hsinchu Language Meetup
                     </h3>
                     <p className="text-gray-400 leading-relaxed max-w-xs mx-auto md:mx-0">
-                        Connecting Hsinchu through language, culture, and shared moments since 2019.
+                        Connecting Taiwan through language, culture, and shared moments since 2019.
                     </p>
                 </div>
 

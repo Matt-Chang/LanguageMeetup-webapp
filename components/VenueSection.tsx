@@ -264,7 +264,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                         {(nextActiveEvent || (!nextEvent?.isCancelled && nextEvent)) ? (
                             <button
                                 onClick={onJoinClick}
-                                className="bg-[#F97316] hover:bg-[#EA580C] text-white text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
+                                className="bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
                             >
                                 Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
                             </button>

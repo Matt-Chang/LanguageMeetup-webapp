@@ -31,7 +31,7 @@ export default function Home() {
           {/* Removed: Every Thursday Tag */}
 
           {/* New Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white drop-shadow-md font-heading leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold mb-6 text-white drop-shadow-md font-heading leading-tight">
             Connect, Share, Learn
           </h1>
 
