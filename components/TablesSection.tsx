@@ -1,17 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { VENUES } from '../lib/venues';
 import { getTablesWithVenues, TableWrapper } from '../lib/tables';
+import { Venue } from '../lib/venues';
 
 interface TablesSectionProps {
-    onVenueSelect: (id: 'mercy' | 't2') => void;
+    onVenueSelect: (id: string) => void;
+    venues: Venue[]; // Passed from parent
 }
 
-export default function TablesSection({ onVenueSelect }: TablesSectionProps) {
+export default function TablesSection({ onVenueSelect, venues }: TablesSectionProps) {
     const [tables, setTables] = useState<TableWrapper[]>([]);
     const [selectedTable, setSelectedTable] = useState<string | null>(null);
-    const [availableVenues, setAvailableVenues] = useState<any[]>([]);
+    const [availableVenues, setAvailableVenues] = useState<Venue[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -34,7 +35,7 @@ export default function TablesSection({ onVenueSelect }: TablesSectionProps) {
         setIsModalOpen(true);
 
         // Filter venues based on table.venues (IDs)
-        const filtered = Object.values(VENUES).filter(venue =>
+        const filtered = venues.filter(venue =>
             table.venues.includes(venue.id)
         );
         setAvailableVenues(filtered);
@@ -46,7 +47,7 @@ export default function TablesSection({ onVenueSelect }: TablesSectionProps) {
     };
 
     const handleVenueClick = (venueId: string) => {
-        onVenueSelect(venueId as 'mercy' | 't2');
+        onVenueSelect(venueId);
         closeModal();
     };
 
@@ -121,8 +122,8 @@ export default function TablesSection({ onVenueSelect }: TablesSectionProps) {
                                         >
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <span className={`font-bold text-sm px-2 py-0.5 rounded text-white ${venue.id === 'mercy' ? 'bg-[#F97316]' : 'bg-[#002B49]'}`}>
-                                                        {venue.id === 'mercy' ? 'Mercy' : 'T2'}
+                                                    <span className={`font-bold text-sm px-2 py-0.5 rounded text-white ${venue.dayOfWeek === 4 ? 'bg-[#F97316]' : 'bg-[#002B49]'}`}>
+                                                        {venue.name.split(' ')[0]} {/* Approximate short name */}
                                                     </span>
                                                     <span className="font-bold text-gray-800 px-1">{venue.name}</span>
                                                 </div>

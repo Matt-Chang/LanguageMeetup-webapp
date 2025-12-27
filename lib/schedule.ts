@@ -1,6 +1,6 @@
 
 import { supabase } from './supabase';
-import { VENUES } from './venues';
+import { getVenues } from './data/venues';
 
 export interface EventStatus {
     date: string; // YYYY-MM-DD
@@ -24,8 +24,11 @@ export async function getUpcomingEvents(venueId?: string, count: number = 4): Pr
 
     let allEvents: EventStatus[] = [];
 
-    // 1. Determine which venues to process
-    const venuesToProcess = venueId ? [VENUES[venueId]] : Object.values(VENUES);
+    // 1. Determine which venues to process from DB
+    const allVenues = await getVenues();
+    const venuesToProcess = venueId
+        ? allVenues.filter(v => v.id === venueId)
+        : allVenues;
 
     // 2. Generate recurring dates for each venue
     for (const venue of venuesToProcess) {
@@ -47,7 +50,7 @@ export async function getUpcomingEvents(venueId?: string, count: number = 4): Pr
                     date: dateString,
                     venueId: venue.id,
                     venueName: venue.name,
-                    dayName: venue.dayOfWeek === 4 ? 'Thursday' : (venue.dayOfWeek === 5 ? 'Friday' : 'Saturday'),
+                    dayName: venue.dayOfWeek === 4 ? 'Thursday' : (venue.dayOfWeek === 5 ? 'Friday' : `Day ${venue.dayOfWeek}`),
                     isCancelled: false, // Default active
                     isNext: false
                 });
@@ -97,7 +100,7 @@ export async function getUpcomingEvents(venueId?: string, count: number = 4): Pr
  */
 export async function getEventsForMonth(year: number, month: number): Promise<EventStatus[]> {
     let allEvents: EventStatus[] = [];
-    const venues = Object.values(VENUES);
+    const venues = await getVenues();
 
     // 1. Generate dates for this month
     const date = new Date(year, month, 1);
@@ -117,7 +120,7 @@ export async function getEventsForMonth(year: number, month: number): Promise<Ev
                     date: dateString,
                     venueId: venue.id,
                     venueName: venue.name,
-                    dayName: venue.dayOfWeek === 4 ? 'Thursday' : (venue.dayOfWeek === 5 ? 'Friday' : 'Saturday'),
+                    dayName: venue.dayOfWeek === 4 ? 'Thursday' : (venue.dayOfWeek === 5 ? 'Friday' : `Day ${venue.dayOfWeek}`),
                     isCancelled: false,
                     isNext: false
                 });

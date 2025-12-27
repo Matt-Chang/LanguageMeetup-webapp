@@ -3,26 +3,28 @@
 import { useState, useEffect } from 'react';
 import JoinModal from './JoinModal';
 import RegistrantTicker from './RegistrantTicker';
-import { VENUES } from '../lib/venues';
 import { getUpcomingEvents, EventStatus } from '../lib/schedule';
+import { Venue } from '../lib/venues';
 
 interface VenueSectionProps {
-    activeVenueId: 'mercy' | 't2';
-    onVenueChange: (id: 'mercy' | 't2') => void;
+    activeVenueId: string;
+    onVenueChange: (id: any) => void;
     onJoinClick: () => void;
+    venues: Venue[]; // Passed from parent
 }
 
-export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick }: VenueSectionProps) {
+export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick, venues }: VenueSectionProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // Removed internal state for activeVenueId to lift it up
     const [nextEvent, setNextEvent] = useState<EventStatus | null>(null);
     const [nextActiveEvent, setNextActiveEvent] = useState<EventStatus | null>(null);
 
-    const activeVenue = VENUES[activeVenueId];
+    const activeVenue = venues.find(v => v.id === activeVenueId) || venues[0];
 
     useEffect(() => {
+        if (!activeVenue) return;
+
         const checkSchedule = async () => {
-            const events = await getUpcomingEvents(activeVenueId, 4);
+            const events = await getUpcomingEvents(activeVenue.id, 4);
             if (events.length > 0) {
                 setNextEvent(events[0]);
                 // Find first non-cancelled event
@@ -31,7 +33,14 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
             }
         };
         checkSchedule();
-    }, [activeVenueId]);
+    }, [activeVenue?.id]);
+
+    if (!activeVenue) return null; // Should wait for loading in parent
+
+    const getDayName = (d: number) => {
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return days[d] || '';
+    };
 
     return (
         <section id="venue" className="py-20 bg-gray-50">
@@ -46,33 +55,27 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                     </h2>
 
                     {/* Venue Tabs */}
-                    <div className="flex justify-center mb-10">
-                        <div className="bg-gray-100 p-1.5 rounded-full inline-flex">
-                            <button
-                                onClick={() => onVenueChange('mercy')}
-                                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${activeVenueId === 'mercy'
-                                    ? 'bg-white text-[#F97316] shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                    }`}
-                            >
-                                Mercy Café (Thu)
-                            </button>
-                            <button
-                                onClick={() => onVenueChange('t2')}
-                                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${activeVenueId === 't2'
-                                    ? 'bg-white text-[#F97316] shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                    }`}
-                            >
-                                T2 Café (Fri)
-                            </button>
+                    <div className="flex justify-center mb-10 overflow-x-auto">
+                        <div className="bg-gray-100 p-1.5 rounded-full inline-flex whitespace-nowrap">
+                            {venues.map(venue => (
+                                <button
+                                    key={venue.id}
+                                    onClick={() => onVenueChange(venue.id)}
+                                    className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${activeVenueId === venue.id
+                                        ? 'bg-white text-[#F97316] shadow-sm'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                >
+                                    {venue.name.split('(')[0].trim()} ({getDayName(venue.dayOfWeek)})
+                                </button>
+                            ))}
                         </div>
                     </div>
 
                     {/* 1. Centered Location */}
                     <div className="text-center mb-12 animate-fadeIn key={activeVenueId}">
 
-                        <h3 className="text-3xl md:text-3xl font-extrabold text-[#002B49] mb-4 font-heading px-4 whitespace-nowrap">
+                        <h3 className="text-3xl md:text-3xl font-extrabold text-[#002B49] mb-4 font-heading px-4 whitespace-nowrap overflow-hidden text-ellipsis">
                             {activeVenue.name}
                         </h3>
                         <div className="text-gray-600 space-y-1">
@@ -227,8 +230,6 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                                         <span className="text-[#1F2937] font-bold text-sm leading-tight">Board<br />Games<br />Table</span>
                                     </div>
 
-
-
                                     {/* Free Talk (Bottom Left) */}
                                     <div className="absolute bottom-4 left-2 w-32 h-44 bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
                                         <span className="text-[#1F2937] font-bold text-sm leading-tight">Free Talk<br />Table</span>
@@ -292,6 +293,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 initialVenueId={activeVenueId}
+                venues={venues} // Pass venues
             />
         </section >
     );

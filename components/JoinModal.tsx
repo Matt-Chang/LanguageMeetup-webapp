@@ -2,19 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { VENUES, TABLE_LIMITS, TABLE_DISPLAY_NAMES } from '../lib/venues';
+import { TABLE_LIMITS, TABLE_DISPLAY_NAMES, Venue } from '../lib/venues';
 import { getUpcomingEvents, EventStatus } from '../lib/schedule';
 
 interface JoinModalProps {
     isOpen: boolean;
     onClose: () => void;
     initialVenueId?: string; // Optional, defaults to 'mercy'
+    venues: Venue[]; // Passed from parent
 }
 
-export default function JoinModal({ isOpen, onClose, initialVenueId = 'mercy' }: JoinModalProps) {
+export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: JoinModalProps) {
     // Determine active venue from prop or fallback (though prop should usually be provided)
     // We update this locally if we want to allow switching inside modal, but for now we stick to initial props logic
-    const activeVenue = VENUES[initialVenueId] || VENUES['mercy'];
+    const activeVenue = venues.find(v => v.id === initialVenueId) || venues[0];
 
     const [formData, setFormData] = useState({
         name: '',
@@ -33,8 +34,6 @@ export default function JoinModal({ isOpen, onClose, initialVenueId = 'mercy' }:
     const LANGUAGES = ['Korean', 'Spanish', 'French', 'German', 'Chinese', 'Other'];
     const MARKETING_SOURCES = ['Facebook', 'Instagram', 'Threads', 'Friend', 'Other'];
 
-
-
     const [availableDates, setAvailableDates] = useState<EventStatus[]>([]);
 
     useEffect(() => {
@@ -48,24 +47,26 @@ export default function JoinModal({ isOpen, onClose, initialVenueId = 'mercy' }:
                 }
             });
         }
-    }, [isOpen, activeVenue]);
+    }, [isOpen, activeVenue?.id]);
 
     // Fetch Counts
     useEffect(() => {
-        if (isOpen && formData.date) {
+        if (isOpen && formData.date && activeVenue) {
             // Logic to reset other fields if needed, or just keep them
             fetchCounts(formData.date);
         }
-    }, [isOpen, formData.date]); // Re-run if modal opens or date changes
+    }, [isOpen, formData.date, activeVenue?.id]); // Re-run if modal opens or date changes
 
     // Update counts when date changes (if user manually changes date)
     useEffect(() => {
-        if (formData.date) {
+        if (formData.date && activeVenue) {
             fetchCounts(formData.date);
         }
-    }, [formData.date]);
+    }, [formData.date, activeVenue?.id]);
 
     const fetchCounts = async (targetDate: string) => {
+        if (!activeVenue) return;
+
         const { data, error } = await supabase
             .from('registrations')
             .select('table_type')
@@ -101,6 +102,7 @@ export default function JoinModal({ isOpen, onClose, initialVenueId = 'mercy' }:
             alert("Please select a date.");
             return;
         }
+        if (!activeVenue) return;
 
         setLoading(true);
 
@@ -152,7 +154,7 @@ export default function JoinModal({ isOpen, onClose, initialVenueId = 'mercy' }:
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !activeVenue) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm font-body">

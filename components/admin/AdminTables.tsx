@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { getTablesWithVenues, createTable, updateTable, deleteTable, TableWrapper } from '../../lib/tables';
-import { VENUES } from '../../lib/venues';
+import { getVenues } from '../../lib/data/venues';
+import { Venue } from '../../lib/venues';
 
 export default function AdminTables() {
     const [tables, setTables] = useState<TableWrapper[]>([]);
+    const [venuesList, setVenuesList] = useState<Venue[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [getError, setGetError] = useState('');
@@ -25,17 +27,21 @@ export default function AdminTables() {
     });
 
     useEffect(() => {
-        loadTables();
+        loadData();
     }, []);
 
-    const loadTables = async () => {
+    const loadData = async () => {
         setIsLoading(true);
         try {
-            const data = await getTablesWithVenues();
-            setTables(data);
+            const [tablesData, venuesData] = await Promise.all([
+                getTablesWithVenues(),
+                getVenues()
+            ]);
+            setTables(tablesData);
+            setVenuesList(venuesData);
         } catch (err) {
-            console.error("Failed to load tables", err);
-            setGetError("Failed to load tables.");
+            console.error("Failed to load data", err);
+            setGetError("Failed to load tables or venues.");
         } finally {
             setIsLoading(false);
         }
@@ -68,7 +74,7 @@ export default function AdminTables() {
 
         try {
             await deleteTable(id);
-            loadTables();
+            loadData(); // Reload both to be safe
         } catch (err) {
             alert('Failed to delete table');
         }
@@ -83,7 +89,7 @@ export default function AdminTables() {
                 await createTable(formData);
             }
             resetForm();
-            loadTables();
+            loadData();
         } catch (err) {
             console.error(err);
             alert('Failed to save table');
@@ -99,6 +105,11 @@ export default function AdminTables() {
                 return { ...prev, venues: [...prev.venues, venueId] };
             }
         });
+    };
+
+    const getVenueName = (id: string) => {
+        const v = venuesList.find(v => v.id === id);
+        return v ? v.name : id;
     };
 
     return (
@@ -141,7 +152,7 @@ export default function AdminTables() {
                         <div className="border-t pt-3 flex flex-wrap gap-1">
                             {table.venues.map(vId => (
                                 <span key={vId} className="text-[10px] uppercase font-bold px-1.5 py-0.5 bg-gray-200 text-gray-600 rounded">
-                                    {vId === 'mercy' ? 'Mercy' : (vId === 't2' ? 'T2' : vId)}
+                                    {getVenueName(vId)}
                                 </span>
                             ))}
                             {table.venues.length === 0 && <span className="text-xs text-red-400 italic">No venues linked</span>}
@@ -253,8 +264,8 @@ export default function AdminTables() {
 
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">Available Venues</label>
-                                <div className="flex gap-4">
-                                    {Object.values(VENUES).map(venue => (
+                                <div className="flex flex-wrap gap-2">
+                                    {venuesList.map(venue => (
                                         <label key={venue.id} className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer transition-all ${formData.venues.includes(venue.id) ? 'bg-primary/10 border-primary text-primary font-bold' : 'border-gray-200 text-gray-500'}`}>
                                             <input
                                                 type="checkbox"
@@ -265,6 +276,7 @@ export default function AdminTables() {
                                             {venue.name}
                                         </label>
                                     ))}
+                                    {venuesList.length === 0 && <p className="text-gray-500 text-sm">No venues created. Go to Venues tab to add one.</p>}
                                 </div>
                             </div>
 
