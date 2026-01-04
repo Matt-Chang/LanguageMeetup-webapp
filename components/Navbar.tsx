@@ -85,7 +85,7 @@ export default function Navbar() {
                     <Link href="/#gallery" onClick={() => setIsMobileMenuOpen(false)} className="block py-3 px-4 rounded-lg text-gray-600 font-medium hover:bg-gray-50 active:bg-gray-100">
                         Gallery
                     </Link>
-                    <a href="https://boardgame-tools.vercel.app/" target="_blank" className="block py-3 px-4 rounded-lg text-gray-600 font-medium hover:bg-gray-50 active:bg-gray-100">
+                    <a href="https://hsinchu-language-meetup-579134451089.us-west1.run.app/" target="_blank" className="block py-3 px-4 rounded-lg text-gray-600 font-medium hover:bg-gray-50 active:bg-gray-100">
                         Board Game Tools ↗
                     </a>
                     <Link href="/#calendar" onClick={() => setIsMobileMenuOpen(false)} className="block py-3 px-4 mt-2 text-center rounded-lg bg-primary text-white font-bold shadow-sm active:bg-primary-dark">
