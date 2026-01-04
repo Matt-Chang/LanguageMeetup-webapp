@@ -3,11 +3,15 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { getUpcomingEvents, EventStatus } from '../../lib/schedule';
+import RegistrantsModal from './RegistrantsModal';
 
 export default function AdminSchedule() {
     const [events, setEvents] = useState<EventStatus[]>([]);
     const [loading, setLoading] = useState(false);
     const [processingId, setProcessingId] = useState<string | null>(null);
+
+    // Modal State
+    const [viewEvent, setViewEvent] = useState<{ date: string, venueId: string } | null>(null);
 
     const loadSchedule = async () => {
         setLoading(true);
@@ -79,7 +83,7 @@ export default function AdminSchedule() {
                                 <th className="p-3">Venue</th>
                                 <th className="p-3">Status</th>
                                 <th className="p-3">Note</th>
-                                <th className="p-3 text-right">Action</th>
+                                <th className="p-3 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -109,7 +113,13 @@ export default function AdminSchedule() {
                                     <td className="p-3 text-sm text-gray-500 italic max-w-xs truncate">
                                         {ev.note || '-'}
                                     </td>
-                                    <td className="p-3 text-right">
+                                    <td className="p-3 text-right flex justify-end gap-2">
+                                        <button
+                                            onClick={() => setViewEvent({ date: ev.date, venueId: ev.venueId })}
+                                            className="text-xs font-bold px-3 py-1.5 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                                        >
+                                            👥 View Guests
+                                        </button>
                                         <button
                                             onClick={() => toggleStatus(ev)}
                                             disabled={processingId === `${ev.venueId}-${ev.date}`}
@@ -129,6 +139,14 @@ export default function AdminSchedule() {
                     </table>
                 </div>
             )}
+
+            {/* Modal */}
+            <RegistrantsModal
+                isOpen={!!viewEvent}
+                onClose={() => setViewEvent(null)}
+                date={viewEvent?.date || ''}
+                venueId={viewEvent?.venueId || ''}
+            />
         </div>
     );
 }

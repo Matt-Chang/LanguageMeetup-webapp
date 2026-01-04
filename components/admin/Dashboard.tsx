@@ -10,6 +10,7 @@ import TrendChart from './TrendChart';
 import AdminSchedule from './AdminSchedule';
 import AdminTables from './AdminTables';
 import AdminVenues from './AdminVenues';
+import RegistrantsModal from './RegistrantsModal';
 
 export default function Dashboard() {
     const router = useRouter();
@@ -19,6 +20,7 @@ export default function Dashboard() {
     const [date, setDate] = useState('');
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isGuestListOpen, setIsGuestListOpen] = useState(false);
 
     // Trend State
     const [trendStart, setTrendStart] = useState('');
@@ -162,10 +164,27 @@ export default function Dashboard() {
                             >
                                 {loading ? 'Loading...' : 'Refresh Data'}
                             </button>
-                            <div className="ml-auto text-gray-600 text-sm font-medium">
-                                Records Found: <span className="text-primary font-bold text-lg">{data.length}</span>
+                            <div className="ml-auto flex items-center gap-4">
+                                <button
+                                    onClick={() => setIsGuestListOpen(true)}
+                                    disabled={data.length === 0}
+                                    className={`px-4 py-2 rounded-md font-bold transition-colors h-10 border ${data.length === 0 ? 'bg-gray-50 text-gray-400 border-gray-200' : 'bg-white text-primary border-primary hover:bg-blue-50'}`}
+                                >
+                                    👥 View Guest List
+                                </button>
+                                <div className="text-gray-600 text-sm font-medium">
+                                    Records Found: <span className="text-primary font-bold text-lg">{data.length}</span>
+                                </div>
                             </div>
                         </div>
+
+                        {/* Modal for Date Viewer */}
+                        <RegistrantsModal
+                            isOpen={isGuestListOpen}
+                            onClose={() => setIsGuestListOpen(false)}
+                            date={date}
+                            venueId="" // Show all venues
+                        />
 
                         {/* Charts Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
