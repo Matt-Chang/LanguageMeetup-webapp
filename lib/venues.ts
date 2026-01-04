@@ -1,3 +1,5 @@
+import { TableWrapper } from './tables';
+
 export interface Venue {
     id: string;
     name: string;
@@ -8,7 +10,7 @@ export interface Venue {
     fee: string;
     feeNote: string;
     description: string;
-    tables: string[];
+    tables: TableWrapper[]; // Changed from string[] to TableWrapper[]
     importantInfo: string[];
     mapType: 'mercy' | 't2' | 'none'; // Updated to include t2
 }

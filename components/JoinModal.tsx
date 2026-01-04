@@ -76,7 +76,9 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
             const counts: Record<string, number> = {};
             // Initialize 0 for ALL known tables just in case, or just active venue tables?
             // Safer to init for active venue tables
-            activeVenue.tables.forEach(t => counts[t] = 0);
+            // Initialize 0 for ALL known tables just in case, or just active venue tables?
+            // Safer to init for active venue tables
+            activeVenue.tables.forEach(t => counts[t.id] = 0);
 
             // Count
             data.forEach((row: any) => {
@@ -243,8 +245,9 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
                                         >
                                             <option value="" disabled>Choose a table...</option>
                                             {/* Map over Active Venue Tables ONLY */}
-                                            {activeVenue.tables.map((key) => {
-                                                const label = TABLE_DISPLAY_NAMES[key] || key;
+                                            {activeVenue.tables.map((tableObj) => {
+                                                const key = tableObj.id;
+                                                const label = tableObj.title || TABLE_DISPLAY_NAMES[key] || key;
                                                 const limit = TABLE_LIMITS[key] || 10;
                                                 const current = tableCounts[key] || 0;
                                                 const left = Math.max(0, limit - current);

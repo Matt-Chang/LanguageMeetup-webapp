@@ -21,7 +21,7 @@ export default function AdminVenues() {
         fee: '',
         feeNote: '',
         description: '',
-        tables: [],
+        tables: [], // Managed in AdminTables
         importantInfo: [],
         mapType: 'none',
     };
@@ -30,7 +30,7 @@ export default function AdminVenues() {
     const [formData, setFormData] = useState<Venue>(initialFormState);
 
     // Helpers for array inputs
-    const [tablesInput, setTablesInput] = useState('');
+    // const [tablesInput, setTablesInput] = useState(''); // Deprecated
     const [infoInput, setInfoInput] = useState('');
 
     useEffect(() => {
@@ -53,7 +53,7 @@ export default function AdminVenues() {
     const resetForm = () => {
         setEditingId(null);
         setFormData(initialFormState);
-        setTablesInput('');
+        // setTablesInput('');
         setInfoInput('');
         setIsModalOpen(false);
         setError('');
@@ -62,7 +62,7 @@ export default function AdminVenues() {
     const handleEdit = (venue: Venue) => {
         setEditingId(venue.id);
         setFormData({ ...venue });
-        setTablesInput(venue.tables.join(', '));
+        // setTablesInput(venue.tables.join(', '));
         setInfoInput(venue.importantInfo.join('\n'));
         setIsModalOpen(true);
     };
@@ -84,7 +84,8 @@ export default function AdminVenues() {
         // Process inputs
         const processedData: Venue = {
             ...formData,
-            tables: tablesInput.split(',').map(s => s.trim()).filter(Boolean),
+            // tables: tablesInput.split(',').map(s => s.trim()).filter(Boolean),
+            tables: [], // Tables are managed in AdminTables now
             importantInfo: infoInput.split('\n').map(s => s.trim()).filter(Boolean)
         };
 
@@ -254,6 +255,8 @@ export default function AdminVenues() {
                                 />
                             </div>
 
+                            {/* Tables Input Removed - Managed in "Tables" tab */}
+                            {/* 
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-1">Tables (comma separated IDs)</label>
                                 <input
@@ -263,7 +266,9 @@ export default function AdminVenues() {
                                     className="w-full border rounded-lg px-3 py-2"
                                     placeholder="free-talk, it, board-game"
                                 />
-                            </div>
+                                <p className="text-xs text-gray-400">Manage table links in the "Tables" tab.</p>
+                            </div> 
+                            */}
 
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-1">Important Info (one per line)</label>
