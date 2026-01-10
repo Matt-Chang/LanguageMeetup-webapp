@@ -21,9 +21,6 @@ export default function GallerySection() {
                         '/assets/group1.jpg',
                         '/assets/group2.jpg',
                         '/assets/group3.jpg',
-                        '/assets/landing-1.jpg',
-                        '/assets/landing-2.jpg',
-                        '/assets/landing-3.jpg'
                     ].map((src, index) => (
                         <div key={index} className="relative aspect-video rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group">
                             <Image
