@@ -105,33 +105,43 @@ export default function Dashboard() {
         <div className="min-h-screen bg-gray-100 font-body">
             {/* Navbar */}
             <nav className="bg-white shadow sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-                    <div className="flex items-center gap-6">
-                        <h1 className="text-xl font-bold text-gray-800">HLM Admin</h1>
-                        <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                <div className="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+                    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto">
+                        <div className="flex justify-between w-full md:w-auto items-center">
+                            <h1 className="text-xl font-bold text-gray-800">HLM Admin</h1>
+                            <button
+                                onClick={handleLogout}
+                                className="md:hidden bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-md transition-colors text-sm font-bold"
+                            >
+                                Logout
+                            </button>
+                        </div>
+
+                        <div className="flex w-full md:w-auto overflow-x-auto gap-1 bg-gray-100 p-1 rounded-lg">
                             <button
                                 onClick={() => setActiveTab('overview')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${activeTab === 'overview' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'overview' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 Overview
                             </button>
                             <button
                                 onClick={() => setActiveTab('venues')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${activeTab === 'venues' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'venues' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 Venues
                             </button>
                             <button
                                 onClick={() => setActiveTab('tables')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${activeTab === 'tables' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'tables' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 Tables
                             </button>
                         </div>
                     </div>
+
                     <button
                         onClick={handleLogout}
-                        className="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-md transition-colors text-sm font-bold"
+                        className="hidden md:block bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-md transition-colors text-sm font-bold"
                     >
                         Logout
                     </button>

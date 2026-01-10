@@ -119,6 +119,15 @@ export async function updateTable(originalId: string, table: TableWrapper) {
 }
 
 export async function deleteTable(id: string) {
+    // 1. Delete links first (Manual Cascade)
+    const { error: linksError } = await supabase
+        .from('venue_tables')
+        .delete()
+        .eq('table_id', id);
+
+    if (linksError) throw linksError;
+
+    // 2. Delete the table
     const { error } = await supabase
         .from('tables')
         .delete()

@@ -130,11 +130,11 @@ export default function AdminTables() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {tables.map(table => (
                     <div key={table.id} className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow relative group bg-gray-50">
-                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleEdit(table)} className="bg-white p-1.5 rounded-md shadow-sm border border-gray-200 hover:text-primary">
+                        <div className="absolute top-4 right-4 flex gap-2">
+                            <button onClick={() => handleEdit(table)} className="bg-white p-1.5 rounded-md shadow-sm border border-gray-200 hover:text-primary transition-colors">
                                 ✏️
                             </button>
-                            <button onClick={() => handleDelete(table.id)} className="bg-white p-1.5 rounded-md shadow-sm border border-gray-200 hover:text-red-600">
+                            <button onClick={() => handleDelete(table.id)} className="bg-white p-1.5 rounded-md shadow-sm border border-gray-200 hover:text-red-600 transition-colors">
                                 🗑️
                             </button>
                         </div>
