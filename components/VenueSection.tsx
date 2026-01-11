@@ -183,9 +183,9 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                                     <div className="absolute top-[7%] right-2 md:right-[5%] w-[120px] md:w-[140px] h-[80px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
                                         <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">Japanese<br />Table</span>
                                     </div>
-                                    {/* IT Bottom Left */}
+                                    {/* Reserved Bottom Left */}
                                     <div className="absolute bottom-[10%] left-2 md:left-[5%] w-[70px] md:w-[80px] h-[120px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
-                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">IT<br />Table</span>
+                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">Reserved</span>
                                     </div>
                                     {/* Free Talk Bottom Right */}
                                     <div className="absolute bottom-[10%] right-2 md:right-[5%] w-[70px] md:w-[80px] h-[160px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
