@@ -11,9 +11,22 @@ export default function CalendarSection({ onVenueSelect }: CalendarSectionProps)
     const [currentDate, setCurrentDate] = useState(new Date()); // Tracks the month we are viewing
     const [events, setEvents] = useState<EventStatus[]>([]);
     const [loading, setLoading] = useState(false);
+    const [todayDate, setTodayDate] = useState<{ day: number; month: number; year: number } | null>(null);
 
+    useEffect(() => {
+        const today = new Date();
+        setTodayDate({
+            day: today.getDate(),
+            month: today.getMonth(),
+            year: today.getFullYear()
+        });
+    }, []);
+
+    // ... existing variable declarations ...
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
+
+
 
     // Fetch events when month changes
     useEffect(() => {
@@ -112,7 +125,10 @@ export default function CalendarSection({ onVenueSelect }: CalendarSectionProps)
                                 return <div key={idx} className="bg-white min-h-[100px] md:min-h-[140px]"></div>;
                             }
 
-                            const isToday = new Date().toISOString().split('T')[0] === cell.dateStr;
+                            const isToday = todayDate
+                                && cell.day === todayDate.day
+                                && month === todayDate.month
+                                && year === todayDate.year;
 
                             return (
                                 <div key={idx} className={`bg-white min-h-[100px] md:min-h-[140px] p-2 flex flex-col relative group transition-colors hover:bg-gray-50`}>
