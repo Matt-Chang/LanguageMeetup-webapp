@@ -133,7 +133,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                     </div>
 
                     {/* 3. Important Info (Orange Box) */}
-                    <div className="bg-[#FFF9F0] rounded-2xl p-8 border border-orange-100 mb-12 text-center text-[#F97316] animate-fadeIn key={activeVenueId + '-notes'}">
+                    <div className="bg-[#FFF9F0] rounded-2xl p-8 border border-orange-100 mb-12 text-center text-gray-700 animate-fadeIn key={activeVenueId + '-notes'}">
                         <div className="text-[#F97316] font-bold text-xl mb-6 flex justify-center items-center gap-2">
                             <span className="text-2xl">⚠️</span> Important Info
                         </div>
@@ -268,14 +268,14 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                                     rel="noopener noreferrer"
                                     className="inline-block bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
                                 >
-                                    Join {nextEvent?.isCancelled ? `Next Available` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
+                                    Join {nextEvent?.isCancelled ? `Next Available` : `Next Meetup (${getDayName(activeVenue.dayOfWeek)})`}
                                 </a>
                             ) : (
                                 <button
                                     onClick={onJoinClick}
                                     className="bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
                                 >
-                                    Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
+                                    Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${getDayName(activeVenue.dayOfWeek)})`}
                                 </button>
                             )
                         ) : (

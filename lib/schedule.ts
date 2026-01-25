@@ -50,7 +50,7 @@ export async function getUpcomingEvents(venueId?: string, count: number = 4): Pr
                     date: dateString,
                     venueId: venue.id,
                     venueName: venue.name,
-                    dayName: venue.dayOfWeek === 4 ? 'Thursday' : (venue.dayOfWeek === 5 ? 'Friday' : `Day ${venue.dayOfWeek}`),
+                    dayName: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][venue.dayOfWeek],
                     isCancelled: false, // Default active
                     isNext: false
                 });
@@ -120,7 +120,7 @@ export async function getEventsForMonth(year: number, month: number): Promise<Ev
                     date: dateString,
                     venueId: venue.id,
                     venueName: venue.name,
-                    dayName: venue.dayOfWeek === 4 ? 'Thursday' : (venue.dayOfWeek === 5 ? 'Friday' : `Day ${venue.dayOfWeek}`),
+                    dayName: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][venue.dayOfWeek],
                     isCancelled: false,
                     isNext: false
                 });
