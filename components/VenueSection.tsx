@@ -47,7 +47,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
             <div className="container mx-auto px-4">
 
                 {/* Main Card Container */}
-                <div className="max-w-3xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden p-8 md:p-12 border border-gray-100 relative">
+                <div className="max-w-3xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden p-5 md:p-12 border border-gray-100 relative">
 
                     {/* 0. Header */}
                     <h2 className="text-3xl font-bold text-center text-[#F97316] mb-8 font-heading">
@@ -133,7 +133,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                     </div>
 
                     {/* 3. Important Info (Orange Box) */}
-                    <div className="bg-[#FFF9F0] rounded-2xl p-8 border border-orange-100 mb-12 text-center text-gray-700 animate-fadeIn key={activeVenueId + '-notes'}">
+                    <div className="bg-[#FFF9F0] rounded-2xl p-5 md:p-8 border border-orange-100 mb-12 text-center text-gray-700 animate-fadeIn key={activeVenueId + '-notes'}">
                         <div className="text-[#F97316] font-bold text-xl mb-6 flex justify-center items-center gap-2">
                             <span className="text-2xl">⚠️</span> Important Info
                         </div>
