@@ -47,7 +47,8 @@ export async function getVenues(): Promise<Venue[]> {
             feeNote: v.fee_note,
             description: v.description,
             tables: venueTables, // Now returning TableWrapper[]
-            importantInfo: v.important_info || [],
+            importantInfo: Array.isArray(v.important_info) ? v.important_info.join('\n') : (v.important_info || ''),
+            externalRegistrationLink: v.external_registration_link,
             mapType: v.map_type,
         };
     });
@@ -67,7 +68,8 @@ export async function createVenue(venue: Venue) {
             fee_note: venue.feeNote,
             description: venue.description,
             // tables: venue.tables, // Deprecated: relying on venue_tables relation
-            important_info: venue.importantInfo,
+            important_info: venue.importantInfo ? [venue.importantInfo] : [],
+            external_registration_link: venue.externalRegistrationLink,
             map_type: venue.mapType,
         });
 
@@ -87,7 +89,8 @@ export async function updateVenue(venue: Venue) {
             fee_note: venue.feeNote,
             description: venue.description,
             tables: venue.tables,
-            important_info: venue.importantInfo,
+            important_info: venue.importantInfo ? [venue.importantInfo] : [],
+            external_registration_link: venue.externalRegistrationLink,
             map_type: venue.mapType,
         })
         .eq('id', venue.id);

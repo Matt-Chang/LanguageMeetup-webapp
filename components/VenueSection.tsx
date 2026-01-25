@@ -137,17 +137,15 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                         <div className="text-[#F97316] font-bold text-xl mb-6 flex justify-center items-center gap-2">
                             <span className="text-2xl">⚠️</span> Important Info
                         </div>
-                        <ul className="text-left text-gray-700 space-y-3 leading-relaxed text-sm md:text-base max-w-lg mx-auto list-disc pl-5 marker:text-[#F97316]">
-                            {/* Cancellation Warning */}
-                            {nextEvent?.isCancelled && (
-                                <li className="font-bold text-red-500">
-                                    NOTICE: Event on {nextEvent.date} is CANCELLED. ({nextEvent.note})
-                                </li>
-                            )}
-                            {activeVenue.importantInfo.map((info, idx) => (
-                                <li key={idx}>{info}</li>
-                            ))}
-                        </ul>
+                        {/* Cancellation Warning */}
+                        {nextEvent?.isCancelled && (
+                            <div className="font-bold text-red-500 mb-4 block">
+                                NOTICE: Event on {nextEvent.date} is CANCELLED. ({nextEvent.note})
+                            </div>
+                        )}
+                        <div className="whitespace-pre-wrap font-medium">
+                            {activeVenue.importantInfo}
+                        </div>
                     </div>
 
                     {/* 4. Map (Conditionally Rendered) */}
@@ -263,12 +261,23 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                         <RegistrantTicker theme="light" venueId={activeVenueId} />
 
                         {(nextActiveEvent || (!nextEvent?.isCancelled && nextEvent)) ? (
-                            <button
-                                onClick={onJoinClick}
-                                className="bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
-                            >
-                                Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
-                            </button>
+                            activeVenue.externalRegistrationLink ? (
+                                <a
+                                    href={activeVenue.externalRegistrationLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
+                                >
+                                    Join {nextEvent?.isCancelled ? `Next Available` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
+                                </a>
+                            ) : (
+                                <button
+                                    onClick={onJoinClick}
+                                    className="bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
+                                >
+                                    Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
+                                </button>
+                            )
                         ) : (
                             <button
                                 disabled
