@@ -18,7 +18,8 @@ export default function Home() {
 
     useEffect(() => {
         if (venues.length > 0 && !activeVenueId) {
-            setActiveVenueId(venues[0].id);
+            const mercy = venues.find(v => v.id === 'mercy');
+            setActiveVenueId(mercy ? mercy.id : venues[0].id);
         }
     }, [venues, activeVenueId]);
 
