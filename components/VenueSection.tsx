@@ -57,7 +57,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                     {/* Venue Tabs */}
                     <div className="flex justify-center mb-10 overflow-x-auto">
                         <div className="bg-gray-100 p-1.5 rounded-full inline-flex whitespace-nowrap">
-                            {venues.map(venue => (
+                            {[...venues].sort((a, b) => (a.id === 'mercy' ? -1 : b.id === 'mercy' ? 1 : 0)).map(venue => (
                                 <button
                                     key={venue.id}
                                     onClick={() => onVenueChange(venue.id)}
