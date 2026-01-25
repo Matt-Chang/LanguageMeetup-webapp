@@ -143,7 +143,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                                 NOTICE: Event on {nextEvent.date} is CANCELLED. ({nextEvent.note})
                             </div>
                         )}
-                        <div className="whitespace-pre-wrap font-medium">
+                        <div className="whitespace-pre-wrap text-left">
                             {activeVenue.importantInfo}
                         </div>
                     </div>
@@ -287,13 +287,15 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                             </button>
                         )}
 
-                        {/* Secondary Link */}
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="mt-4 text-gray-500 underline text-sm hover:text-gray-700 block mx-auto"
-                        >
-                            Register for a different date
-                        </button>
+                        {/* Secondary Link - Only show if no external link */}
+                        {!activeVenue.externalRegistrationLink && (
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="mt-4 text-gray-500 underline text-sm hover:text-gray-700 block mx-auto"
+                            >
+                                Register for a different date
+                            </button>
+                        )}
                     </div>
                 </div>
 
