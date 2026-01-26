@@ -128,7 +128,9 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                             </div>
                             <p className="text-gray-700 font-bold text-sm mb-1">{activeVenue.fee}</p>
                             <p className="text-gray-400 text-[10px] mb-1">{activeVenue.feeNote}</p>
-                            <p className="text-[#F97316] font-bold text-[10px]">Please pay at the front desk.</p>
+                            {activeVenue.id === 'mercy' && (
+                                <p className="text-[#F97316] font-bold text-[10px]">Please pay at the front desk.</p>
+                            )}
                         </div>
                     </div>
 
