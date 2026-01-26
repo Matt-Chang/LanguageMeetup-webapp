@@ -22,7 +22,8 @@ export default function AdminVenues() {
         feeNote: '',
         description: '',
         tables: [], // Managed in AdminTables
-        importantInfo: [],
+        importantInfo: '',
+        externalRegistrationLink: '',
         mapType: 'none',
     };
 
@@ -31,7 +32,7 @@ export default function AdminVenues() {
 
     // Helpers for array inputs
     // const [tablesInput, setTablesInput] = useState(''); // Deprecated
-    const [infoInput, setInfoInput] = useState('');
+    const [infoInput, setInfoInput] = useState(''); // Deprecated but keeping for simple migration if needed, though we will bind directly
 
     useEffect(() => {
         loadVenues();
@@ -63,7 +64,7 @@ export default function AdminVenues() {
         setEditingId(venue.id);
         setFormData({ ...venue });
         // setTablesInput(venue.tables.join(', '));
-        setInfoInput(venue.importantInfo.join('\n'));
+        // setInfoInput(venue.importantInfo.join('\n'));
         setIsModalOpen(true);
     };
 
@@ -86,7 +87,7 @@ export default function AdminVenues() {
             ...formData,
             // tables: tablesInput.split(',').map(s => s.trim()).filter(Boolean),
             tables: [], // Tables are managed in AdminTables now
-            importantInfo: infoInput.split('\n').map(s => s.trim()).filter(Boolean)
+            // importantInfo: infoInput.split('\n').map(s => s.trim()).filter(Boolean)
         };
 
         try {
@@ -271,13 +272,25 @@ export default function AdminVenues() {
                             */}
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Important Info (one per line)</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Important Info (Description)</label>
                                 <textarea
-                                    value={infoInput}
-                                    onChange={e => setInfoInput(e.target.value)}
+                                    value={formData.importantInfo}
+                                    onChange={e => setFormData({ ...formData, importantInfo: e.target.value })}
                                     className="w-full border rounded-lg px-3 py-2 h-24"
                                     placeholder="No outside food...&#10;Be polite..."
                                 />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">External Registration Link (Optional)</label>
+                                <input
+                                    type="text"
+                                    value={formData.externalRegistrationLink || ''}
+                                    onChange={e => setFormData({ ...formData, externalRegistrationLink: e.target.value })}
+                                    className="w-full border rounded-lg px-3 py-2"
+                                    placeholder="https://..."
+                                />
+                                <p className="text-xs text-gray-400 mt-1">If set, the 'Join' button will link directly to this URL instead of the internal modal.</p>
                             </div>
 
                             <div>

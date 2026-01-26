@@ -11,8 +11,9 @@ export interface Venue {
     feeNote: string;
     description: string;
     tables: TableWrapper[]; // Changed from string[] to TableWrapper[]
-    importantInfo: string[];
-    mapType: 'mercy' | 't2' | 'none'; // Updated to include t2
+    importantInfo: string; // Changed from string[] to text block
+    externalRegistrationLink?: string; // New field for external sign up
+    mapType: 'mercy' | 't2' | 'none';
 }
 
 

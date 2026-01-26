@@ -47,7 +47,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
             <div className="container mx-auto px-4">
 
                 {/* Main Card Container */}
-                <div className="max-w-3xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden p-8 md:p-12 border border-gray-100 relative">
+                <div className="max-w-3xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden p-5 md:p-12 border border-gray-100 relative">
 
                     {/* 0. Header */}
                     <h2 className="text-3xl font-bold text-center text-[#F97316] mb-8 font-heading">
@@ -57,7 +57,7 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                     {/* Venue Tabs */}
                     <div className="flex justify-center mb-10 overflow-x-auto">
                         <div className="bg-gray-100 p-1.5 rounded-full inline-flex whitespace-nowrap">
-                            {venues.map(venue => (
+                            {[...venues].sort((a, b) => (a.id === 'mercy' ? -1 : b.id === 'mercy' ? 1 : 0)).map(venue => (
                                 <button
                                     key={venue.id}
                                     onClick={() => onVenueChange(venue.id)}
@@ -128,26 +128,26 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                             </div>
                             <p className="text-gray-700 font-bold text-sm mb-1">{activeVenue.fee}</p>
                             <p className="text-gray-400 text-[10px] mb-1">{activeVenue.feeNote}</p>
-                            <p className="text-[#F97316] font-bold text-[10px]">Please pay at the front desk.</p>
+                            {activeVenue.id === 'mercy' && (
+                                <p className="text-[#F97316] font-bold text-[10px]">Please pay at the front desk.</p>
+                            )}
                         </div>
                     </div>
 
                     {/* 3. Important Info (Orange Box) */}
-                    <div className="bg-[#FFF9F0] rounded-2xl p-8 border border-orange-100 mb-12 text-center text-[#F97316] animate-fadeIn key={activeVenueId + '-notes'}">
+                    <div className="bg-[#FFF9F0] rounded-2xl p-5 md:p-8 border border-orange-100 mb-12 text-center text-gray-700 animate-fadeIn key={activeVenueId + '-notes'}">
                         <div className="text-[#F97316] font-bold text-xl mb-6 flex justify-center items-center gap-2">
                             <span className="text-2xl">⚠️</span> Important Info
                         </div>
-                        <ul className="text-left text-gray-700 space-y-3 leading-relaxed text-sm md:text-base max-w-lg mx-auto list-disc pl-5 marker:text-[#F97316]">
-                            {/* Cancellation Warning */}
-                            {nextEvent?.isCancelled && (
-                                <li className="font-bold text-red-500">
-                                    NOTICE: Event on {nextEvent.date} is CANCELLED. ({nextEvent.note})
-                                </li>
-                            )}
-                            {activeVenue.importantInfo.map((info, idx) => (
-                                <li key={idx}>{info}</li>
-                            ))}
-                        </ul>
+                        {/* Cancellation Warning */}
+                        {nextEvent?.isCancelled && (
+                            <div className="font-bold text-red-500 mb-4 block">
+                                NOTICE: Event on {nextEvent.date} is CANCELLED. ({nextEvent.note})
+                            </div>
+                        )}
+                        <div className="whitespace-pre-wrap text-left">
+                            {activeVenue.importantInfo}
+                        </div>
                     </div>
 
                     {/* 4. Map (Conditionally Rendered) */}
@@ -263,12 +263,23 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                         <RegistrantTicker theme="light" venueId={activeVenueId} />
 
                         {(nextActiveEvent || (!nextEvent?.isCancelled && nextEvent)) ? (
-                            <button
-                                onClick={onJoinClick}
-                                className="bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
-                            >
-                                Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${activeVenue.dayOfWeek === 4 ? 'Thu' : 'Fri'})`}
-                            </button>
+                            activeVenue.externalRegistrationLink ? (
+                                <a
+                                    href={activeVenue.externalRegistrationLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
+                                >
+                                    Join {nextEvent?.isCancelled ? `Next Available` : `Next Meetup (${getDayName(activeVenue.dayOfWeek)})`}
+                                </a>
+                            ) : (
+                                <button
+                                    onClick={onJoinClick}
+                                    className="bg-[#F97316] hover:bg-[#EA580C] text-white text-base md:text-lg font-bold py-3 px-12 rounded-full shadow-lg hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-300 w-full md:w-auto"
+                                >
+                                    Join {nextEvent?.isCancelled ? `Next Available (${nextActiveEvent?.date.slice(5)})` : `Next Meetup (${getDayName(activeVenue.dayOfWeek)})`}
+                                </button>
+                            )
                         ) : (
                             <button
                                 disabled
@@ -278,13 +289,15 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                             </button>
                         )}
 
-                        {/* Secondary Link */}
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="mt-4 text-gray-500 underline text-sm hover:text-gray-700 block mx-auto"
-                        >
-                            Register for a different date
-                        </button>
+                        {/* Secondary Link - Only show if no external link */}
+                        {!activeVenue.externalRegistrationLink && (
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="mt-4 text-gray-500 underline text-sm hover:text-gray-700 block mx-auto"
+                            >
+                                Register for a different date
+                            </button>
+                        )}
                     </div>
                 </div>
 
