@@ -157,9 +157,7 @@ export default function CalendarSection({ onVenueSelect }: CalendarSectionProps)
                                                 {ev.isCancelled && (
                                                     <div className="text-[8px] font-bold mt-0.5 no-underline">CANCELLED</div>
                                                 )}
-                                                {!ev.isCancelled && (
-                                                    <div className="text-[8px] md:text-[9px] opacity-80 mt-0.5 transform">{ev.venueId === 'mercy' ? '7 PM' : '6 PM'}</div>
-                                                )}
+
                                             </div>
                                         ))}
                                     </div>
