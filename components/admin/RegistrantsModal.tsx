@@ -39,6 +39,7 @@ export default function RegistrantsModal({ isOpen, onClose, date, venueId }: Reg
             .from('registrations')
             .select('*')
             .eq('event_date', date)
+            .eq('venue_id', venueId) // Filter by venueId
             .order('table_type', { ascending: true })
             .order('created_at', { ascending: true });
 

@@ -70,7 +70,8 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
         const { data, error } = await supabase
             .from('registrations')
             .select('table_type')
-            .eq('event_date', targetDate);
+            .eq('event_date', targetDate)
+            .eq('venue_id', activeVenue.id);
 
         if (data) {
             const counts: Record<string, number> = {};
