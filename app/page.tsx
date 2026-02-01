@@ -7,6 +7,7 @@ import TablesSection from '../components/TablesSection';
 import VenueSection from '../components/VenueSection';
 import GallerySection from '../components/GallerySection';
 import CalendarSection from '../components/CalendarSection';
+import TestimonialsSection from '../components/TestimonialsSection';
 import { useVenues } from '../hooks/useVenues';
 
 export default function Home() {
@@ -68,6 +69,7 @@ export default function Home() {
                 </div>
             </header>
 
+            <TestimonialsSection />
             <TablesSection onVenueSelect={handleVenueSelect} venues={venues} />
             <GallerySection />
             {/* CalendarSection manages its own data but triggers venue selection */}
