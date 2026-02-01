@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { TABLE_LIMITS, TABLE_DISPLAY_NAMES, Venue } from '../lib/venues';
 import { getUpcomingEvents, EventStatus } from '../lib/schedule';
+import { getTableExceptions, TableException } from '../lib/availability';
 
 interface JoinModalProps {
     isOpen: boolean;
@@ -35,6 +36,7 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
     const MARKETING_SOURCES = ['Facebook', 'Instagram', 'Threads', 'Friend', 'Other'];
 
     const [availableDates, setAvailableDates] = useState<EventStatus[]>([]);
+    const [tableExceptions, setTableExceptions] = useState<TableException[]>([]);
 
     useEffect(() => {
         if (isOpen && activeVenue) {
@@ -49,13 +51,21 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
         }
     }, [isOpen, activeVenue?.id]);
 
-    // Fetch Counts
+    // Fetch Counts AND Exceptions
     useEffect(() => {
         if (isOpen && formData.date && activeVenue) {
             // Logic to reset other fields if needed, or just keep them
             fetchCounts(formData.date);
+            fetchExceptions(formData.date);
         }
-    }, [isOpen, formData.date, activeVenue?.id]); // Re-run if modal opens or date changes
+    }, [isOpen, formData.date, activeVenue?.id]);
+
+    // Helper to fetch exceptions
+    const fetchExceptions = async (date: string) => {
+        if (!activeVenue) return;
+        const exs = await getTableExceptions(activeVenue.id, date);
+        setTableExceptions(exs);
+    };
 
     // Update counts when date changes (if user manually changes date)
     useEffect(() => {
@@ -75,10 +85,7 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
 
         if (data) {
             const counts: Record<string, number> = {};
-            // Initialize 0 for ALL known tables just in case, or just active venue tables?
-            // Safer to init for active venue tables
-            // Initialize 0 for ALL known tables just in case, or just active venue tables?
-            // Safer to init for active venue tables
+            // Initialize 0 for active venue tables
             activeVenue.tables.forEach(t => counts[t.id] = 0);
 
             // Count
@@ -106,6 +113,13 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
             return;
         }
         if (!activeVenue) return;
+
+        // Double check availability on submit to prevent race conditions
+        const isCancelled = tableExceptions.some(e => e.table_id === formData.table && e.is_cancelled);
+        if (isCancelled) {
+            alert("Sorry, this table is not available on this date.");
+            return;
+        }
 
         setLoading(true);
 
@@ -254,9 +268,16 @@ export default function JoinModal({ isOpen, onClose, initialVenueId, venues }: J
                                                 const left = Math.max(0, limit - current);
                                                 const isFull = left === 0;
 
+                                                // Check cancellation
+                                                const isCancelled = tableExceptions.find(e => e.table_id === key && e.is_cancelled);
+
                                                 return (
-                                                    <option key={key} value={key} disabled={isFull}>
-                                                        {label} (spot left this week: {left})
+                                                    <option key={key} value={key} disabled={isFull || !!isCancelled}>
+                                                        {label}
+                                                        {isCancelled
+                                                            ? ' (the host is not available on that day)'
+                                                            : ` (spot left this week: ${left})`
+                                                        }
                                                     </option>
                                                 );
                                             })}

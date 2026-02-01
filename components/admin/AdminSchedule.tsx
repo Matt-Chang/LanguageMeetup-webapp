@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { getUpcomingEvents, EventStatus } from '../../lib/schedule';
 import RegistrantsModal from './RegistrantsModal';
+import TableAvailabilityModal from './TableAvailabilityModal';
 
 export default function AdminSchedule() {
     const [events, setEvents] = useState<EventStatus[]>([]);
@@ -12,6 +13,7 @@ export default function AdminSchedule() {
 
     // Modal State
     const [viewEvent, setViewEvent] = useState<{ date: string, venueId: string } | null>(null);
+    const [manageTablesEvent, setManageTablesEvent] = useState<{ date: string, venueId: string } | null>(null);
 
     const loadSchedule = async () => {
         setLoading(true);
@@ -115,6 +117,13 @@ export default function AdminSchedule() {
                                     </td>
                                     <td className="p-3 text-right flex justify-end gap-2">
                                         <button
+                                            onClick={() => setManageTablesEvent({ date: ev.date, venueId: ev.venueId })}
+                                            className="text-xs font-bold px-3 py-1.5 rounded bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors"
+                                            disabled={ev.isCancelled}
+                                        >
+                                            🛠️ Tables
+                                        </button>
+                                        <button
                                             onClick={() => setViewEvent({ date: ev.date, venueId: ev.venueId })}
                                             className="text-xs font-bold px-3 py-1.5 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
                                         >
@@ -146,6 +155,14 @@ export default function AdminSchedule() {
                 onClose={() => setViewEvent(null)}
                 date={viewEvent?.date || ''}
                 venueId={viewEvent?.venueId || ''}
+            />
+
+            {/* Availability Modal */}
+            <TableAvailabilityModal
+                isOpen={!!manageTablesEvent}
+                onClose={() => setManageTablesEvent(null)}
+                date={manageTablesEvent?.date || ''}
+                venueId={manageTablesEvent?.venueId || ''}
             />
         </div>
     );
