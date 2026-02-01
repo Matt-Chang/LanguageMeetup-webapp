@@ -21,14 +21,19 @@ export default function TestimonialsSection() {
 
     useEffect(() => {
         const fetchComments = async () => {
+            // Fetch more than we need so we can randomize a bit
             const { data, error } = await supabase
                 .from('comments')
                 .select('*')
                 .eq('comment_type', 'Thank You Note')
                 .order('created_at', { ascending: false })
-                .limit(6);
+                .limit(20);
 
-            if (data) setComments(data);
+            if (data) {
+                // Random shuffle
+                const shuffled = data.sort(() => 0.5 - Math.random());
+                setComments(shuffled.slice(0, 6)); // Take first 6
+            }
             setLoading(false);
         };
 
@@ -47,10 +52,11 @@ export default function TestimonialsSection() {
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 font-heading">
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 font-heading inline-block relative">
                         What People Say About Us
+                        <span className="block h-1.5 w-full bg-orange-500 mt-2 rounded-full"></span>
                     </h2>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-gray-600 max-w-2xl mx-auto mt-4">
                         Stories from our community members.
                     </p>
                 </div>
@@ -90,7 +96,7 @@ export default function TestimonialsSection() {
                         onClick={() => setIsModalOpen(true)}
                         className="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition-all shadow-sm hover:shadow-md transform hover:-translate-y-1"
                     >
-                        ✍️ Leave a Comment
+                        Tell us what you think
                     </button>
                 </div>
             </div>
