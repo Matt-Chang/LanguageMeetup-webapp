@@ -10,11 +10,12 @@ import TrendChart from './TrendChart';
 import AdminSchedule from './AdminSchedule';
 import AdminTables from './AdminTables';
 import AdminVenues from './AdminVenues';
+import AdminComments from './AdminComments';
 import RegistrantsModal from './RegistrantsModal';
 
 export default function Dashboard() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'overview' | 'venues' | 'tables'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'venues' | 'tables' | 'comments'>('overview');
 
     // Overview State
     const [date, setDate] = useState('');
@@ -136,6 +137,12 @@ export default function Dashboard() {
                             >
                                 Tables
                             </button>
+                            <button
+                                onClick={() => setActiveTab('comments')}
+                                className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'comments' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                Comments
+                            </button>
                         </div>
                     </div>
 
@@ -252,6 +259,12 @@ export default function Dashboard() {
                 {activeTab === 'tables' && (
                     <div className="animate-fadeIn">
                         <AdminTables />
+                    </div>
+                )}
+
+                {activeTab === 'comments' && (
+                    <div className="animate-fadeIn">
+                        <AdminComments />
                     </div>
                 )}
 
