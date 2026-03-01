@@ -35,16 +35,18 @@ export default function RegistrantsModal({ isOpen, onClose, date, venueId }: Reg
         // We filter by date. If we need to filter by venue_id, we can add that too.
         // Assuming date is unique enough or we want all registrations for that date.
         // Best to filter by venue_id as well if provided to be safe.
-        const { data, error } = await supabase
+        let query = supabase
             .from('registrations')
             .select('*')
-            .eq('event_date', date)
-            // Filter by venueId OR null (for legacy records)
-            .or(`venue_id.eq.${venueId},venue_id.is.null`)
+            .eq('event_date', date);
+
+        if (venueId) {
+            query = query.or(`venue_id.eq.${venueId},venue_id.is.null`);
+        }
+
+        const { data, error } = await query
             .order('table_type', { ascending: true })
             .order('created_at', { ascending: true });
-
-
 
         if (error) {
             console.error(error);
@@ -71,7 +73,8 @@ export default function RegistrantsModal({ isOpen, onClose, date, venueId }: Reg
                 <h3 className="text-2xl font-bold mb-1 text-gray-800">Registrants List</h3>
                 <p className="text-gray-500 mb-6 font-medium">
                     Date: <span className="text-primary">{date}</span>
-                    {/* <span className="mx-2">|</span> Venue ID: {venueId} */}
+                    <span className="mx-2">|</span>
+                    Number of People: <span className="text-primary font-bold">{registrants.length}</span>
                 </p>
 
                 {loading ? (

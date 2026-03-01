@@ -190,7 +190,7 @@ export default function Dashboard() {
                                     👥 View Guest List
                                 </button>
                                 <div className="text-gray-600 text-sm font-medium">
-                                    Records Found: <span className="text-primary font-bold text-lg">{data.length}</span>
+                                    Number of People: <span className="text-primary font-bold text-lg">{data.length}</span>
                                 </div>
                             </div>
                         </div>
