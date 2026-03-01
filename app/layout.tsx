@@ -32,6 +32,36 @@ export default function RootLayout({
           {children}
         </div>
         <Footer />
+
+        {/* JSON-LD Structured Data for AI/SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Event",
+              "name": "Hsinchu Language Meetup",
+              "description": "A vibrant community dedicated to making language practice fun and accessible. Practice English, Mandarin, Japanese, and more in Hsinchu.",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "location": {
+                "@type": "Place",
+                "name": "Hsinchu City",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Hsinchu",
+                  "addressRegion": "Hsinchu City",
+                  "addressCountry": "TW"
+                }
+              },
+              "organizer": {
+                "@type": "Organization",
+                "name": "Hsinchu Language Meetup",
+                "url": "https://language-meetup-webapp.vercel.app/"
+              }
+            })
+          }}
+        />
       </body>
     </html>
   );
