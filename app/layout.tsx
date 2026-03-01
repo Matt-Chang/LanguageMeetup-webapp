@@ -16,7 +16,25 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: 'Hsinchu Language Meetup | Connect, Share, Learn',
-  description: 'Join the Hsinchu Language Meetup! Connect with language lovers, practice English, Mandarin, Japanese, and more.',
+  description: 'Join the Hsinchu Language Meetup! Connect with language lovers, practice English, Mandarin, Japanese, and more in Hsinchu, Taiwan.',
+  keywords: ['Hsinchu', 'Language Exchange', 'English Meetup', 'Taiwan', 'Learn English', 'Practice Japanese', 'Mandarin Exchange', 'Language Club', 'Zhubei'],
+  authors: [{ name: 'Hsinchu Language Meetup' }],
+  alternates: {
+    canonical: 'https://language-meetup-webpage.vercel.app',
+  },
+  openGraph: {
+    title: 'Hsinchu Language Meetup | English, Mandarin & Japanese Exchange',
+    description: 'A vibrant community dedicated to making language practice fun and accessible in Hsinchu, Taiwan. Join our weekly events!',
+    url: 'https://language-meetup-webpage.vercel.app',
+    siteName: 'Hsinchu Language Meetup',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hsinchu Language Meetup',
+    description: 'Practice English, Mandarin, Japanese & more in Hsinchu!',
+  },
 };
 
 export default function RootLayout({
