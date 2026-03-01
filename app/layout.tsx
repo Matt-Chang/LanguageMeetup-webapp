@@ -46,11 +46,12 @@ export default function RootLayout({
               "eventStatus": "https://schema.org/EventScheduled",
               "location": {
                 "@type": "Place",
-                "name": "Hsinchu City",
+                "name": "慕溪園Mercy caf’e & lunch box",
                 "address": {
                   "@type": "PostalAddress",
-                  "addressLocality": "Hsinchu",
-                  "addressRegion": "Hsinchu City",
+                  "streetAddress": "302, Hsinchu County, Zhubei City, Section 5, Xinglong Rd, 71號一樓",
+                  "addressLocality": "Zhubei City",
+                  "addressRegion": "Hsinchu County",
                   "addressCountry": "TW"
                 }
               },
