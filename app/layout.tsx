@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     title: 'Hsinchu Language Meetup',
     description: 'Practice English, Mandarin, Japanese & more in Hsinchu!',
   },
+  verification: {
+    google: 'jk_oPwCOdlL3u2ECyf1z9L1QfLyWc133mQ1OlYxiSIU',
+  },
 };
 
 export default function RootLayout({
