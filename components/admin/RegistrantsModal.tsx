@@ -23,6 +23,7 @@ interface Registration {
 export default function RegistrantsModal({ isOpen, onClose, date, venueId }: RegistrantsModalProps) {
     const [registrants, setRegistrants] = useState<Registration[]>([]);
     const [loading, setLoading] = useState(false);
+    const [copySuccess, setCopySuccess] = useState(false);
 
     useEffect(() => {
         if (isOpen && date) {
@@ -55,6 +56,47 @@ export default function RegistrantsModal({ isOpen, onClose, date, venueId }: Reg
             setRegistrants(data || []);
         }
         setLoading(false);
+    };
+
+    const generateGuestListText = () => {
+        let text = `📅 日期 Date: ${date}\n👥 總人數 Total: ${registrants.length} 人\n`;
+
+        // Group by table type
+        const grouped: Record<string, Registration[]> = {};
+        registrants.forEach(reg => {
+            const table = reg.table_type || 'Unknown';
+            if (!grouped[table]) grouped[table] = [];
+            grouped[table].push(reg);
+        });
+
+        Object.entries(grouped).forEach(([table, regs]) => {
+            text += `\n[${table}] (${regs.length} 人)\n`;
+            regs.forEach((reg, index) => {
+                const firstTimeMark = reg.is_first_time ? ' (New🌟)' : '';
+                text += `${index + 1}. ${reg.user_name}${firstTimeMark}\n`;
+            });
+        });
+
+        return text;
+    };
+
+    const handleCopyToClipboard = async () => {
+        const text = generateGuestListText();
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopySuccess(true);
+            setTimeout(() => setCopySuccess(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy!', err);
+            alert('Failed to copy to clipboard.');
+        }
+    };
+
+    const handleShareToLine = () => {
+        const text = generateGuestListText();
+        const encodedText = encodeURIComponent(text);
+        const lineUrl = `https://line.me/R/share?text=${encodedText}`;
+        window.open(lineUrl, '_blank');
     };
 
     if (!isOpen) return null;
@@ -124,7 +166,39 @@ export default function RegistrantsModal({ isOpen, onClose, date, venueId }: Reg
                     </div>
                 )}
 
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex justify-between items-center border-t border-gray-100 pt-4">
+                    <div className="flex gap-3">
+                        <button
+                            onClick={handleCopyToClipboard}
+                            disabled={registrants.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold transition-all ${copySuccess
+                                    ? 'bg-green-100 text-green-700'
+                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed'
+                                }`}
+                        >
+                            {copySuccess ? (
+                                <>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                    Copied!
+                                </>
+                            ) : (
+                                <>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+                                    Copy List
+                                </>
+                            )}
+                        </button>
+                        <button
+                            onClick={handleShareToLine}
+                            disabled={registrants.length === 0}
+                            className="flex items-center gap-2 bg-[#00B900] hover:bg-[#009900] text-white px-5 py-2.5 rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+                        >
+                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zM8.536 13.064H6.313c-.328 0-.594-.267-.594-.594V7.598c0-.327.266-.594.594-.594h.594c.328 0 .594.267.594.594v4.278h1.031c.328 0 .594.267.594.594v.594c0 .328-.266.594-.594.594zm2.846-.594c0 .327-.266.594-.594.594h-.594c-.328 0-.594-.267-.594-.594V7.598c0-.327.266-.594.594-.594h.594c.328 0 .594.267.594.594v4.872zm4.148 0c0 .327-.266.594-.594.594h-.594c-.161 0-.317-.067-.428-.184l-2.091-2.45v2.04c0 .327-.266.594-.594.594h-.594c-.328 0-.594-.267-.594-.594V7.598c0-.327.266-.594.594-.594h.594c.16 0 .316.067.428.184l2.091 2.449v-2.039c0-.327.266-.594.594-.594h.594c.328 0 .594.267.594.594v4.872zm4.493-2.909c0 .328-.266.594-.594.594h-1.625v.784h1.625c.328 0 .594.267.594.594v.594c0 .328-.266.594-.594.594H17.21c-.328 0-.594-.267-.594-.594V7.598c0-.327.266-.594.594-.594h2.188c.328 0 .594.267.594.594v.594c0 .327-.266.594-.594.594h-1.625v.783h1.625c.328 0 .594.267.594.594v.594z" />
+                            </svg>
+                            Share to LINE
+                        </button>
+                    </div>
                     <button
                         onClick={onClose}
                         className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-bold transition-colors"
