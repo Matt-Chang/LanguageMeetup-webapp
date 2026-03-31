@@ -175,9 +175,9 @@ export default function VenueSection({ activeVenueId, onVenueChange, onJoinClick
                                 <div className="absolute bottom-[54px] left-1/2 transform -translate-x-1/2 ml-10 w-[2px] h-3 bg-[#002B49]"></div>
 
                                 <div className="relative h-[450px] w-full mt-6">
-                                    {/* Card Games Top Left */}
+                                    {/* Skills Sharing Top Left */}
                                     <div className="absolute top-[5%] left-2 md:left-[5%] w-[70px] md:w-[80px] h-[140px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
-                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">Card<br />Games<br />Table</span>
+                                        <span className="text-[#1F2937] font-bold text-xs md:text-sm leading-tight">Skills<br />Sharing<br />Table</span>
                                     </div>
                                     {/* Japanese Top Right */}
                                     <div className="absolute top-[7%] right-2 md:right-[5%] w-[120px] md:w-[140px] h-[80px] bg-[#FFF0E0] border-2 border-[#F97316] rounded-2xl flex items-center justify-center p-2 text-center shadow-sm z-10">
